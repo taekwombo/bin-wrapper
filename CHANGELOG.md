@@ -11,4 +11,4 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* use system binary if possible ([de57ffe](https://github.com/mole-inc/bin-wrapper/commit/de57ffe157ca0b29647907b65a11c12aa1a3d3ff))
+* use system binary if possible ([de57ffe](https://github.com/mole-inc/bin-wrapper/commit/de57ffe157ca0b29647907b65a11c12aa1a3d3ff)) ([6597e01](https://github.com/mole-inc/bin-wrapper/commit/6597e014ec7ca8be35a37497276a04b043d531c4))
