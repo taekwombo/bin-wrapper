@@ -1,15 +1,16 @@
-import fs from 'fs';
-import path from 'path';
-import nock from 'nock';
-import pathExists from 'path-exists';
-import pify from 'pify';
-import rimraf from 'rimraf';
-import test from 'ava';
-import tempy from 'tempy';
-import executable from 'executable';
-import Fn from '.';
+const fs = require('fs');
+const path = require('path');
+const nock = require('nock');
+const pathExists = require('path-exists');
+const rimraf = require('rimraf');
+const test = require('ava');
+const tempy = require('tempy');
+const executable = require('executable');
+const Fn = require('.');
 
-const rimrafP = pify(rimraf);
+const {promisify} = require('util');
+
+const rimrafP = promisify(rimraf);
 const fixture = path.join.bind(path, __dirname, 'fixtures');
 
 test.beforeEach(() => {
@@ -119,7 +120,11 @@ test('error if no binary is found and no source is provided', async t => {
 		.dest(tempy.directory())
 		.use(process.platform === 'win32' ? 'gifsicle.exe' : 'gifsicle');
 
-	await t.throws(bin.run(), 'No binary found matching your system. It\'s probably not supported.');
+	await t.throwsAsync(
+		() => bin.run(),
+		{instanceOf: Error},
+		'No binary found matching your system. It\'s probably not supported.'
+	);
 });
 
 test('downloaded files are set to be executable', async t => {
@@ -141,10 +146,10 @@ test('downloaded files are set to be executable', async t => {
 
 test('can use a system binary if found in PATH', async t => {
 	const bin = new Fn()
-		.dest(tempfile())
+		.dest(tempy.directory())
 		.use(process.platform === 'win32' ? 'node.exe' : 'node');
 
-	await pify(bin.run.bind(bin))();
+	await bin.run();
 
 	t.true(await pathExists(bin.path()));
 });

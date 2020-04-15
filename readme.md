@@ -6,14 +6,14 @@
 ## Install
 
 ```
-$ npm install bin-wrapper
+$ npm install @mole-inc/bin-wrapper
 ```
 
 
 ## Usage
 
 ```js
-const BinWrapper = require('bin-wrapper');
+const BinWrapper = require('@mole-inc/bin-wrapper');
 
 const base = 'https://github.com/imagemin/gifsicle-bin/raw/master/vendor';
 const bin = new BinWrapper()
@@ -130,4 +130,6 @@ binary is working.
 
 ## License
 
-MIT © [Kevin Mårtensson](http://kevinmartensson.com)
+This is a fork of [kevva/bin-wrapper](https://github.com/kevva/bin-wrapper) that merged https://github.com/kevva/bin-wrapper/pull/56 and some changes.
+
+see LICENSE file.

@@ -1,18 +1,18 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const url = require('url');
-const pify = require('pify');
+
 const importLazy = require('import-lazy')(require);
+const {promisify} = require('util');
 
 const binCheck = importLazy('bin-check');
 const binVersionCheck = importLazy('bin-version-check');
 const download = importLazy('download');
-const osFilterObj = importLazy('os-filter-obj');
-const which = require('which');
+const osFilterObject = importLazy('os-filter-obj');
+const which = importLazy('which');
 
-const statAsync = pify(fs.stat);
-const chmodAsync = pify(fs.chmod);
+const statAsync = promisify(fs.stat);
+const chmodAsync = promisify(fs.chmod);
 
 /**
  * Initialize a new `BinWrapper`
@@ -105,7 +105,7 @@ module.exports = class BinWrapper {
 	 * @api public
 	 */
 	path() {
-		const systemBin = which.sync(this.use(), {nothrow: true})
+		const systemBin = which.sync(this.use(), {nothrow: true});
 
 		if (systemBin) {
 			return systemBin;
@@ -120,14 +120,13 @@ module.exports = class BinWrapper {
 	 * @param {Array} cmd
 	 * @api public
 	 */
-	run(cmd = ['--version']) {
-		return this.findExisting().then(() => {
-			if (this.options.skipCheck) {
-				return;
-			}
+	async run(cmd = ['--version']) {
+		await this.findExisting();
+		if (this.options.skipCheck) {
+			return;
+		}
 
-			return this.runCheck(cmd);
-		});
+		return this.runCheck(cmd);
 	}
 
 	/**
@@ -136,18 +135,15 @@ module.exports = class BinWrapper {
 	 * @param {Array} cmd
 	 * @api private
 	 */
-	runCheck(cmd) {
-		return binCheck(this.path(), cmd).then(works => {
-			if (!works) {
-				throw new Error(`The \`${this.path()}\` binary doesn't seem to work correctly`);
-			}
+	async runCheck(cmd) {
+		const works = await binCheck(this.path(), cmd);
+		if (!works) {
+			throw new Error(`The \`${this.path()}\` binary doesn't seem to work correctly`);
+		}
 
-			if (this.version()) {
-				return binVersionCheck(this.path(), this.version());
-			}
-
-			return Promise.resolve();
-		});
+		if (this.version()) {
+			return binVersionCheck(this.path(), this.version());
+		}
 	}
 
 	/**
@@ -155,13 +151,13 @@ module.exports = class BinWrapper {
 	 *
 	 * @api private
 	 */
-	findExisting() {
+	async findExisting() {
 		return statAsync(this.path()).catch(error => {
 			if (error && error.code === 'ENOENT') {
 				return this.download();
 			}
 
-			return Promise.reject(error);
+			return new Error(error);
 		});
 	}
 
@@ -170,44 +166,43 @@ module.exports = class BinWrapper {
 	 *
 	 * @api private
 	 */
-	download() {
-		const files = osFilterObj(this.src() || []);
+	async download() {
+		const files = osFilterObject(this.src() || []);
 		const urls = [];
 
 		if (files.length === 0) {
-			return Promise.reject(new Error('No binary found matching your system. It\'s probably not supported.'));
+			throw new Error('No binary found matching your system. It\'s probably not supported.');
 		}
 
 		files.forEach(file => urls.push(file.url));
 
-		return Promise.all(urls.map(url => download(url, this.dest(), {
+		const result = await Promise.all(urls.map(url => download(url, this.dest(), {
 			extract: true,
 			strip: this.options.strip
-		}))).then(result => {
-			const resultingFiles = flatten(result.map((item, index) => {
-				if (Array.isArray(item)) {
-					return item.map(file => file.path);
-				}
+		})));
+		const resultingFiles = flatten(result.map((item, index) => {
+			if (Array.isArray(item)) {
+				return item.map(file => file.path);
+			}
 
-				const parsedUrl = url.parse(files[index].url);
-				const parsedPath = path.parse(parsedUrl.pathname);
+			const parsedUrl = new URL(files[index].url);
+			const parsedPath = path.parse(parsedUrl.pathname);
 
-				return parsedPath.base;
-			}));
+			return parsedPath.base;
+		}));
 
-			return Promise.all(resultingFiles.map(fileName => {
-				return chmodAsync(path.join(this.dest(), fileName), 0o755);
-			}));
-		});
+		return Promise.all(resultingFiles.map(fileName => {
+			return chmodAsync(path.join(this.dest(), fileName), 0o755);
+		}));
 	}
 };
 
-function flatten(arr) {
-	return arr.reduce((acc, elem) => {
-		if (Array.isArray(elem)) {
-			acc.push(...elem);
+function flatten(array) {
+	return array.reduce((acc, element) => {
+		if (Array.isArray(element)) {
+			acc.push(...element);
 		} else {
-			acc.push(elem);
+			acc.push(element);
 		}
 
 		return acc;
