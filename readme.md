@@ -1,4 +1,4 @@
-# bin-wrapper [![Build Status](https://travis-ci.org/kevva/bin-wrapper.svg?branch=master)](https://travis-ci.org/kevva/bin-wrapper)
+# bin-wrapper ![Node CI](https://github.com/mole-inc/bin-wrapper/workflows/Node%20CI/badge.svg)
 
 > Binary wrapper that makes your programs seamlessly available as local dependencies
 
