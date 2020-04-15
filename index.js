@@ -9,6 +9,7 @@ const binCheck = importLazy('bin-check');
 const binVersionCheck = importLazy('bin-version-check');
 const download = importLazy('download');
 const osFilterObj = importLazy('os-filter-obj');
+const which = require('which');
 
 const statAsync = pify(fs.stat);
 const chmodAsync = pify(fs.chmod);
@@ -104,6 +105,12 @@ module.exports = class BinWrapper {
 	 * @api public
 	 */
 	path() {
+		const systemBin = which.sync(this.use(), {nothrow: true})
+
+		if (systemBin) {
+			return systemBin;
+		}
+
 		return path.join(this.dest(), this.use());
 	}
 
