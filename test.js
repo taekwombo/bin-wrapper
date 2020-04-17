@@ -143,13 +143,3 @@ test('downloaded files are set to be executable', async t => {
 		t.true(executable.sync(path.join(bin.dest(), fileName)));
 	});
 });
-
-test('can use a system binary if found in PATH', async t => {
-	const bin = new Fn()
-		.dest(tempy.directory())
-		.use(process.platform === 'win32' ? 'node.exe' : 'node');
-
-	await bin.run();
-
-	t.true(await pathExists(bin.path()));
-});

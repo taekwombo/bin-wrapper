@@ -9,7 +9,6 @@ const binCheck = importLazy('bin-check');
 const binVersionCheck = importLazy('bin-version-check');
 const download = importLazy('download');
 const osFilterObject = importLazy('os-filter-obj');
-const which = importLazy('which');
 
 const statAsync = promisify(fs.stat);
 const chmodAsync = promisify(fs.chmod);
@@ -105,12 +104,6 @@ module.exports = class BinWrapper {
 	 * @api public
 	 */
 	path() {
-		const systemBin = which.sync(this.use(), {nothrow: true});
-
-		if (systemBin) {
-			return systemBin;
-		}
-
 		return path.join(this.dest(), this.use());
 	}
 
@@ -136,13 +129,17 @@ module.exports = class BinWrapper {
 	 * @api private
 	 */
 	async runCheck(cmd) {
-		const works = await binCheck(this.path(), cmd);
-		if (!works) {
-			throw new Error(`The \`${this.path()}\` binary doesn't seem to work correctly`);
-		}
+		const bin = this.path();
+		await binCheck(bin, cmd).catch(() => {
+			throw new Error(`The \`${bin}\` binary doesn't seem to work correctly`);
+		});
 
 		if (this.version()) {
-			return binVersionCheck(this.path(), this.version());
+			if (JSON.stringify(['--version']) === JSON.stringify(cmd)) {
+				return binVersionCheck(bin, this.version());
+			}
+
+			return binVersionCheck(bin, this.version(), {args: cmd});
 		}
 	}
 

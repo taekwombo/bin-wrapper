@@ -130,6 +130,6 @@ binary is working.
 
 ## License
 
-This is a fork of [kevva/bin-wrapper](https://github.com/kevva/bin-wrapper) that merged https://github.com/kevva/bin-wrapper/pull/56 and some changes.
+This is a fork of [kevva/bin-wrapper](https://github.com/kevva/bin-wrapper).
 
 see LICENSE file.
