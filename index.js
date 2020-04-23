@@ -130,17 +130,17 @@ module.exports = class BinWrapper {
 	 */
 	async runCheck(cmd) {
 		const bin = this.path();
-		await binCheck(bin, cmd).catch(() => {
-			throw new Error(`The \`${bin}\` binary doesn't seem to work correctly`);
-		});
-
 		if (this.version()) {
-			if (JSON.stringify(['--version']) === JSON.stringify(cmd)) {
+			if (cmd.length === 1 && cmd[0] === '--version') {
 				return binVersionCheck(bin, this.version());
 			}
 
 			return binVersionCheck(bin, this.version(), {args: cmd});
 		}
+
+		await binCheck(bin, cmd).catch(() => {
+			throw new Error(`The \`${bin}\` binary doesn't seem to work correctly`);
+		});
 	}
 
 	/**
