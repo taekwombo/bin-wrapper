@@ -14,7 +14,7 @@ const rimrafP = promisify(rimraf);
 const fixture = path.join.bind(path, __dirname, 'fixtures');
 
 test.beforeEach(() => {
-	nock('http://foo.com')
+	nock('http://example.com')
 		.get('/gifsicle.tar.gz')
 		.replyWithFile(200, fixture('gifsicle-' + process.platform + '.tar.gz'))
 		.get('/gifsicle-darwin.tar.gz')
@@ -30,12 +30,12 @@ test('expose a constructor', t => {
 });
 
 test('add a source', t => {
-	const bin = new Fn().src('http://foo.com/bar.tar.gz');
-	t.is(bin._src[0].url, 'http://foo.com/bar.tar.gz');
+	const bin = new Fn().src('http://example.com/bar.tar.gz');
+	t.is(bin._src[0].url, 'http://example.com/bar.tar.gz');
 });
 
 test('add a source to a specific os', t => {
-	const bin = new Fn().src('http://foo.com', process.platform);
+	const bin = new Fn().src('http://example.com', process.platform);
 	t.is(bin._src[0].os, process.platform);
 });
 
@@ -64,7 +64,7 @@ test('get the binary path', t => {
 
 test('verify that a binary is working', async t => {
 	const bin = new Fn()
-		.src('http://foo.com/gifsicle.tar.gz')
+		.src('http://example.com/gifsicle.tar.gz')
 		.dest(tempy.directory())
 		.use(process.platform === 'win32' ? 'gifsicle.exe' : 'gifsicle');
 
@@ -75,7 +75,7 @@ test('verify that a binary is working', async t => {
 
 test('meet the desired version', async t => {
 	const bin = new Fn()
-		.src('http://foo.com/gifsicle.tar.gz')
+		.src('http://example.com/gifsicle.tar.gz')
 		.dest(tempy.directory())
 		.use(process.platform === 'win32' ? 'gifsicle.exe' : 'gifsicle')
 		.version('>=1.71');
@@ -87,9 +87,9 @@ test('meet the desired version', async t => {
 
 test('download files even if they are not used', async t => {
 	const bin = new Fn({strip: 0, skipCheck: true})
-		.src('http://foo.com/gifsicle-darwin.tar.gz')
-		.src('http://foo.com/gifsicle-win32.tar.gz')
-		.src('http://foo.com/test.js')
+		.src('http://example.com/gifsicle-darwin.tar.gz')
+		.src('http://example.com/gifsicle-win32.tar.gz')
+		.src('http://example.com/test.js')
 		.dest(tempy.directory())
 		.use(process.platform === 'win32' ? 'gifsicle.exe' : 'gifsicle');
 
@@ -106,7 +106,7 @@ test('download files even if they are not used', async t => {
 
 test('skip running binary check', async t => {
 	const bin = new Fn({skipCheck: true})
-		.src('http://foo.com/gifsicle.tar.gz')
+		.src('http://example.com/gifsicle.tar.gz')
 		.dest(tempy.directory())
 		.use(process.platform === 'win32' ? 'gifsicle.exe' : 'gifsicle');
 
@@ -129,9 +129,9 @@ test('error if no binary is found and no source is provided', async t => {
 
 test('downloaded files are set to be executable', async t => {
 	const bin = new Fn({strip: 0, skipCheck: true})
-		.src('http://foo.com/gifsicle-darwin.tar.gz')
-		.src('http://foo.com/gifsicle-win32.tar.gz')
-		.src('http://foo.com/test.js')
+		.src('http://example.com/gifsicle-darwin.tar.gz')
+		.src('http://example.com/gifsicle-win32.tar.gz')
+		.src('http://example.com/test.js')
 		.dest(tempy.directory())
 		.use(process.platform === 'win32' ? 'gifsicle.exe' : 'gifsicle');
 
