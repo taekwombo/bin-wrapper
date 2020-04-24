@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [6.0.1](https://github.com/mole-inc/bin-wrapper/compare/v6.0.0...v6.0.1) (2020-04-24)
+
+
+### Bug Fixes
+
+* checking version early in `runCheck` ([79529df](https://github.com/mole-inc/bin-wrapper/commit/79529dfef4d71b5ef4454f7f1f610f29f84d6332))
+
 ## [6.0.0](https://github.com/mole-inc/bin-wrapper/compare/v5.0.0...v6.0.0) (2020-04-17)
 
 
