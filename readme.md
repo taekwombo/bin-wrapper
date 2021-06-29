@@ -1,7 +1,10 @@
-# bin-wrapper ![Node CI](https://github.com/mole-inc/bin-wrapper/workflows/Node%20CI/badge.svg)
+# bin-wrapper [![Node CI](https://github.com/mole-inc/bin-wrapper/actions/workflows/nodejs.yml/badge.svg)](https://github.com/mole-inc/bin-wrapper/actions/workflows/nodejs.yml)
 
 > Binary wrapper that makes your programs seamlessly available as local dependencies
 
+[![Downloads](https://badgen.net/npm/dm/@mole-inc/bin-wrapper)](https://www.npmjs.com/package/@mole-inc/bin-wrapper)
+[![Version](https://badgen.net/npm/v/@mole-inc/bin-wrapper)](https://www.npmjs.com/package/@mole-inc/bin-wrapper)
+[![codecov](https://codecov.io/gh/mole-inc/bin-wrapper/branch/master/graph/badge.svg)](https://codecov.io/gh/mole-inc/bin-wrapper)
 
 ## Install
 
@@ -13,7 +16,7 @@ $ npm install @mole-inc/bin-wrapper
 ## Usage
 
 ```js
-const BinWrapper = require('@mole-inc/bin-wrapper');
+import {BinWrapper} from '@mole-inc/bin-wrapper';
 
 const base = 'https://github.com/imagemin/gifsicle-bin/raw/master/vendor';
 const bin = new BinWrapper()
@@ -62,6 +65,22 @@ Type: `number`<br>
 Default: `1`
 
 Strip a number of leading paths from file names on extraction.
+
+##### filename
+
+Type: `string`<br>
+Default: `undefined`
+
+Set the binary filename.
+
+##### gotOptions
+
+Type: `object`<br>
+Default: `undefined`
+
+Any of the [`https.request`](https://nodejs.org/api/https.html#https_https_request_options_callback) options.
+
+https://github.com/sindresorhus/got/tree/v10.7.0#options
 
 ### .src(url, [os], [arch])
 

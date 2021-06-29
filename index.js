@@ -1,17 +1,75 @@
-'use strict';
-const fs = require('fs');
-const path = require('path');
 
-const importLazy = require('import-lazy')(require);
-const {promisify} = require('util');
+import {promises as fsPromises} from 'node:fs';
+import path from 'node:path';
+import {URL} from 'node:url';
+import got from 'got';
+import decompress from 'decompress';
+import fileType from 'file-type';
+import filenamify from 'filenamify';
+import osFilterObj from 'os-filter-obj';
+import binCheck from 'bin-check';
+import binVersionCheck from 'bin-version-check';
+import contentDisposition from 'content-disposition';
+import extName from 'ext-name';
 
-const binCheck = importLazy('bin-check');
-const binVersionCheck = importLazy('bin-version-check');
-const download = importLazy('download');
-const osFilterObject = importLazy('os-filter-obj');
+const archiveType = input => {
+	const exts = new Set([
+		'7z',
+		'bz2',
+		'gz',
+		'rar',
+		'tar',
+		'zip',
+		'xz',
+		'gz'
+	]);
+	const fileTypeResult = fileType(input);
+	if (fileTypeResult) {
+		return exts.has(fileTypeResult.ext) ? fileTypeResult : null;
+	}
 
-const statAsync = promisify(fs.stat);
-const chmodAsync = promisify(fs.chmod);
+	return null;
+};
+
+const getExtFromMime = response => {
+	const header = response.headers['content-type'];
+
+	if (!header) {
+		return null;
+	}
+
+	const exts = extName.mime(header);
+
+	if (exts.length !== 1) {
+		return null;
+	}
+
+	return exts[0].ext;
+};
+
+const getFilename = (response, data) => {
+	const header = response.headers['content-disposition'];
+
+	if (header) {
+		const parsed = contentDisposition.parse(header);
+
+		if (parsed.parameters && parsed.parameters.filename) {
+			return parsed.parameters.filename;
+		}
+	}
+
+	const filename = path.basename(new URL(response.requestUrl).pathname);
+
+	if (!path.extname(filename)) {
+		const ext = (fileType(data) || {}).ext || getExtFromMime(response);
+
+		if (ext) {
+			return `${filename}.${ext}`;
+		}
+	}
+
+	return filename;
+};
 
 /**
  * Initialize a new `BinWrapper`
@@ -19,7 +77,7 @@ const chmodAsync = promisify(fs.chmod);
  * @param {Object} options
  * @api public
  */
-module.exports = class BinWrapper {
+class BinWrapper {
 	constructor(options = {}) {
 		this.options = options;
 
@@ -28,6 +86,11 @@ module.exports = class BinWrapper {
 		} else if (!this.options.strip) {
 			this.options.strip = 1;
 		}
+
+		this._src = [];
+		this._dest = '';
+		this._use = '';
+		this._version = '';
 	}
 
 	/**
@@ -43,7 +106,6 @@ module.exports = class BinWrapper {
 			return this._src;
 		}
 
-		this._src = this._src || [];
 		this._src.push({
 			url: src,
 			os,
@@ -103,7 +165,7 @@ module.exports = class BinWrapper {
 	 *
 	 * @api public
 	 */
-	path() {
+	get path() {
 		return path.join(this.dest(), this.use());
 	}
 
@@ -129,7 +191,7 @@ module.exports = class BinWrapper {
 	 * @api private
 	 */
 	async runCheck(cmd) {
-		const bin = this.path();
+		const bin = this.path;
 		if (this.version()) {
 			if (cmd.length === 1 && cmd[0] === '--version') {
 				return binVersionCheck(bin, this.version());
@@ -149,13 +211,15 @@ module.exports = class BinWrapper {
 	 * @api private
 	 */
 	async findExisting() {
-		return statAsync(this.path()).catch(error => {
+		try {
+			await fsPromises.stat(this.path);
+		} catch (error) {
 			if (error && error.code === 'ENOENT') {
 				return this.download();
 			}
 
-			return new Error(error);
-		});
+			throw new Error(error);
+		}
 	}
 
 	/**
@@ -164,20 +228,44 @@ module.exports = class BinWrapper {
 	 * @api private
 	 */
 	async download() {
-		const files = osFilterObject(this.src() || []);
+		const files = osFilterObj(this.src());
 		const urls = [];
 
 		if (files.length === 0) {
 			throw new Error('No binary found matching your system. It\'s probably not supported.');
 		}
 
-		files.forEach(file => urls.push(file.url));
+		for (const file of files) {
+			urls.push(file.url);
+		}
 
-		const result = await Promise.all(urls.map(url => download(url, this.dest(), {
-			extract: true,
-			strip: this.options.strip
-		})));
-		const resultingFiles = flatten(result.map((item, index) => {
+		const downloadFile = async (url, output) => {
+			const responsePromise = got(url, {
+				responseType: 'buffer',
+				rejectUnauthorized: process.env.npm_config_strict_ssl !== 'false',
+				...this.options.gotOptions
+			});
+			const response = await responsePromise;
+			const data = await responsePromise.buffer();
+
+			if (!output) {
+				return archiveType(data) ? decompress(data, {strip: this.options.strip}) : data;
+			}
+
+			const filename = this.options.filename || filenamify(getFilename(response, data));
+			const outputFilepath = path.join(output, filename);
+
+			if (archiveType(data)) {
+				return decompress(data, path.dirname(outputFilepath), {strip: this.options.strip});
+			}
+
+			await fsPromises.mkdir(path.dirname(outputFilepath), {recursive: true});
+			await fsPromises.writeFile(outputFilepath, data);
+			return data;
+		};
+
+		const result = await Promise.all(urls.map(url => downloadFile(url, this.dest())));
+		const resultingFiles = result.flatMap((item, index) => {
 			if (Array.isArray(item)) {
 				return item.map(file => file.path);
 			}
@@ -186,22 +274,12 @@ module.exports = class BinWrapper {
 			const parsedPath = path.parse(parsedUrl.pathname);
 
 			return parsedPath.base;
-		}));
+		});
 
 		return Promise.all(resultingFiles.map(fileName => {
-			return chmodAsync(path.join(this.dest(), fileName), 0o755);
+			return fsPromises.chmod(path.join(this.dest(), fileName), 0o755);
 		}));
 	}
-};
-
-function flatten(array) {
-	return array.reduce((acc, element) => {
-		if (Array.isArray(element)) {
-			acc.push(...element);
-		} else {
-			acc.push(element);
-		}
-
-		return acc;
-	}, []);
 }
+
+export {BinWrapper};
