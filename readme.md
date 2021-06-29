@@ -33,10 +33,10 @@ const bin = new BinWrapper()
 })();
 ```
 
-Get the path to your binary with `bin.path()`:
+Get the path to your binary with `bin.path`:
 
 ```js
-console.log(bin.path());
+console.log(bin.path);
 //=> 'path/to/vendor/gifsicle'
 ```
 
@@ -120,7 +120,7 @@ Type: `string`
 
 Define which file to use as the binary.
 
-### .path()
+### .path
 
 Returns the full path to your binary.
 
