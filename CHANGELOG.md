@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.0.0](https://github.com/mole-inc/bin-wrapper/compare/v6.0.1...v7.0.0) (2021-06-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* require node.js 12 (#2)
+
+### Features
+
+* require node.js 12 ([#2](https://github.com/mole-inc/bin-wrapper/issues/2)) ([df4974e](https://github.com/mole-inc/bin-wrapper/commit/df4974e42569d140bb7f509c94925f1ca18a72cc))
+
 ### [6.0.1](https://github.com/mole-inc/bin-wrapper/compare/v6.0.0...v6.0.1) (2020-04-24)
 
 
