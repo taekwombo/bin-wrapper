@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [7.1.0](https://github.com/mole-inc/bin-wrapper/compare/v7.0.0...v7.1.0) (2021-12-04)
+
+
+### Features
+
+* add cjs ([#3](https://github.com/mole-inc/bin-wrapper/issues/3)) ([039eaba](https://github.com/mole-inc/bin-wrapper/commit/039eabab2f4dbbec103f3329f182e75b95dec141))
+
 ## [7.0.0](https://github.com/mole-inc/bin-wrapper/compare/v6.0.1...v7.0.0) (2021-06-29)
 
 
