@@ -23,7 +23,9 @@ export default {
 		nodeResolve({
 			preferBuiltins: true,
 		}),
-		commonjs(),
+		commonjs({
+			strictRequires: 'auto',
+		}),
 		json(),
 	],
 };

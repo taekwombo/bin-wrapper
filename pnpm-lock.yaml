@@ -4,7 +4,7 @@ specifiers:
   '@commitlint/cli': latest
   '@commitlint/config-conventional': latest
   '@rollup/plugin-alias': ^3.1.8
-  '@rollup/plugin-commonjs': ^21.0.1
+  '@rollup/plugin-commonjs': ^22.0.0-1
   '@rollup/plugin-json': ^4.1.0
   '@rollup/plugin-node-resolve': ^13.0.6
   ava: ^3.15.0
@@ -19,7 +19,7 @@ specifiers:
   file-type: ^17.0.0
   filenamify: ^5.0.2
   got: ^10.7.0
-  husky: ^7.0.0
+  husky: ^7.0.4
   nock: ^13.2.1
   os-filter-obj: ^2.0.0
   path-exists: ^5.0.0
@@ -44,7 +44,7 @@ devDependencies:
   '@commitlint/cli': 15.0.0
   '@commitlint/config-conventional': 15.0.0
   '@rollup/plugin-alias': 3.1.8_rollup@2.60.2
-  '@rollup/plugin-commonjs': 21.0.1_rollup@2.60.2
+  '@rollup/plugin-commonjs': 22.0.0-1_rollup@2.60.2
   '@rollup/plugin-json': 4.1.0_rollup@2.60.2
   '@rollup/plugin-node-resolve': 13.0.6_rollup@2.60.2
   ava: 3.15.0
@@ -529,11 +529,11 @@ packages:
       slash: 3.0.0
     dev: true
 
-  /@rollup/plugin-commonjs/21.0.1_rollup@2.60.2:
-    resolution: {integrity: sha512-EA+g22lbNJ8p5kuZJUYyhhDK7WgJckW5g4pNN7n4mAFUM96VuwUnNT3xr2Db2iCZPI1pJPbGyfT5mS9T1dHfMg==}
-    engines: {node: '>= 8.0.0'}
+  /@rollup/plugin-commonjs/22.0.0-1_rollup@2.60.2:
+    resolution: {integrity: sha512-Cep2fK3V5zK1Gh0FCofEaToswwt2Q/FmLQaPRWeZFmCDP4Yhy2uYhoZcuEC3IOK5qWYkrtBiNVy2QC7Q4mx8NQ==}
+    engines: {node: '>= 12.0.0'}
     peerDependencies:
-      rollup: ^2.38.3
+      rollup: ^2.60.0
     dependencies:
       '@rollup/pluginutils': 3.1.0_rollup@2.60.2
       commondir: 1.0.1
@@ -1086,7 +1086,7 @@ packages:
     dependencies:
       buffer: 5.7.1
       inherits: 2.0.4
-      readable-stream: /readable-stream-no-circular/3.6.0
+      readable-stream: 3.6.0
     dev: true
 
   /blueimp-md5/2.19.0:
@@ -4510,14 +4510,6 @@ packages:
       type-fest: 1.4.0
     dev: true
 
-  /readable-stream-no-circular/3.6.0:
-    resolution: {integrity: sha512-0JSra3VGVnFtnadVNMjbtdrr7dYuPVgYP+90IpQUAWMuSy0J7gt7MZhw9cWZ1jekyuNBNDTFnfJe+b5s0yhJXg==}
-    engines: {node: '>= 6'}
-    dependencies:
-      inherits: 2.0.4
-      string_decoder: 1.3.0
-      util-deprecate: 1.0.2
-
   /readable-stream/2.3.7:
     resolution: {integrity: sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==}
     dependencies:
@@ -4536,13 +4528,12 @@ packages:
       inherits: 2.0.4
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
-    dev: true
 
   /readable-web-to-node-stream/3.0.2:
     resolution: {integrity: sha512-ePeK6cc1EcKLEhJFt/AebMCLL+GgSKhuygrZ/GLaKZYEecIgIECf4UaUuaByiGtzckwR4ain9VzUh95T1exYGw==}
     engines: {node: '>=8'}
     dependencies:
-      readable-stream: /readable-stream-no-circular/3.6.0
+      readable-stream: 3.6.0
     dev: false
 
   /readdirp/3.6.0:
