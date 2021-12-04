@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [7.1.1](https://github.com/mole-inc/bin-wrapper/compare/v7.1.0...v7.1.1) (2021-12-04)
+
+
+### Bug Fixes
+
+* rebuild ([ed3b99c](https://github.com/mole-inc/bin-wrapper/commit/ed3b99ca31fa40611058a5973ecddcf84ed30e80))
+
 ## [7.1.0](https://github.com/mole-inc/bin-wrapper/compare/v7.0.0...v7.1.0) (2021-12-04)
 
 
