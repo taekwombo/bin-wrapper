@@ -1,10 +1,9 @@
-
-import {promises as fsPromises} from 'node:fs';
-import path from 'node:path';
-import {URL} from 'node:url';
+import {promises as fsPromises} from 'fs';
+import path from 'path';
+import process from 'process';
 import got from 'got';
 import decompress from 'decompress';
-import fileType from 'file-type';
+import {fileTypeFromBuffer} from 'file-type';
 import filenamify from 'filenamify';
 import osFilterObj from 'os-filter-obj';
 import binCheck from 'bin-check';
@@ -12,7 +11,7 @@ import binVersionCheck from 'bin-version-check';
 import contentDisposition from 'content-disposition';
 import extName from 'ext-name';
 
-const archiveType = input => {
+const archiveType = async input => {
 	const exts = new Set([
 		'7z',
 		'bz2',
@@ -21,9 +20,9 @@ const archiveType = input => {
 		'tar',
 		'zip',
 		'xz',
-		'gz'
+		'gz',
 	]);
-	const fileTypeResult = fileType(input);
+	const fileTypeResult = await fileTypeFromBuffer(input).catch(() => null);
 	if (fileTypeResult) {
 		return exts.has(fileTypeResult.ext) ? fileTypeResult : null;
 	}
@@ -47,7 +46,7 @@ const getExtFromMime = response => {
 	return exts[0].ext;
 };
 
-const getFilename = (response, data) => {
+const getFilename = async (response, data) => {
 	const header = response.headers['content-disposition'];
 
 	if (header) {
@@ -61,7 +60,8 @@ const getFilename = (response, data) => {
 	const filename = path.basename(new URL(response.requestUrl).pathname);
 
 	if (!path.extname(filename)) {
-		const ext = (fileType(data) || {}).ext || getExtFromMime(response);
+		const fileTypeResult = await fileTypeFromBuffer(data).catch(() => null);
+		const ext = fileTypeResult ? fileTypeResult.ext : getExtFromMime(response);
 
 		if (ext) {
 			return `${filename}.${ext}`;
@@ -109,7 +109,7 @@ class BinWrapper {
 		this._src.push({
 			url: src,
 			os,
-			arch
+			arch,
 		});
 
 		return this;
@@ -243,19 +243,19 @@ class BinWrapper {
 			const responsePromise = got(url, {
 				responseType: 'buffer',
 				rejectUnauthorized: process.env.npm_config_strict_ssl !== 'false',
-				...this.options.gotOptions
+				...this.options.gotOptions,
 			});
 			const response = await responsePromise;
 			const data = await responsePromise.buffer();
 
 			if (!output) {
-				return archiveType(data) ? decompress(data, {strip: this.options.strip}) : data;
+				return await archiveType(data) ? decompress(data, {strip: this.options.strip}) : data;
 			}
 
-			const filename = this.options.filename || filenamify(getFilename(response, data));
+			const filename = this.options.filename || filenamify(await getFilename(response, data));
 			const outputFilepath = path.join(output, filename);
 
-			if (archiveType(data)) {
+			if (await archiveType(data)) {
 				return decompress(data, path.dirname(outputFilepath), {strip: this.options.strip});
 			}
 
@@ -276,9 +276,7 @@ class BinWrapper {
 			return parsedPath.base;
 		});
 
-		return Promise.all(resultingFiles.map(fileName => {
-			return fsPromises.chmod(path.join(this.dest(), fileName), 0o755);
-		}));
+		return Promise.all(resultingFiles.map(fileName => fsPromises.chmod(path.join(this.dest(), fileName), 0o755)));
 	}
 }
 

@@ -1,9 +1,10 @@
-import {fileURLToPath} from 'node:url';
-import {promises as fsPromises} from 'node:fs';
-import path from 'node:path';
-import {promisify} from 'node:util';
+import {fileURLToPath} from 'url';
+import {promises as fsPromises} from 'fs';
+import path from 'path';
+import process from 'process';
+import {promisify} from 'util';
 import nock from 'nock';
-import pathExists from 'path-exists';
+import {pathExists} from 'path-exists';
 import rimraf from 'rimraf';
 import test from 'ava';
 import tempy from 'tempy';
@@ -126,7 +127,7 @@ test('error if no binary is found and no source is provided', async t => {
 	await t.throwsAsync(
 		() => bin.run(),
 		{instanceOf: Error},
-		'No binary found matching your system. It\'s probably not supported.'
+		'No binary found matching your system. It\'s probably not supported.',
 	);
 });
 
