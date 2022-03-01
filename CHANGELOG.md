@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0](https://github.com/mole-inc/bin-wrapper/compare/v7.1.1...v8.0.0) (2022-03-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* don't decompress src (#4)
+
+### Features
+
+* don't decompress src ([#4](https://github.com/mole-inc/bin-wrapper/issues/4)) ([88bdf4d](https://github.com/mole-inc/bin-wrapper/commit/88bdf4ddceac67a17e2b34a7099be2669072b106))
+
 ### [7.1.1](https://github.com/mole-inc/bin-wrapper/compare/v7.1.0...v7.1.1) (2021-12-04)
 
 
