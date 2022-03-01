@@ -12,9 +12,9 @@ jobs:
       NODE_VERSION: ${{ matrix.node-version }}
     steps:
     - uses: actions/checkout@v2
-    - uses: pnpm/action-setup@v2.0.1
+    - uses: pnpm/action-setup@v2
       with:
-        version: 6.23.6
+        version: 6.32.2
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:

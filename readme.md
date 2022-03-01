@@ -59,13 +59,6 @@ Default: `false`
 
 Whether to skip the binary check or not.
 
-##### strip
-
-Type: `number`<br>
-Default: `1`
-
-Strip a number of leading paths from file names on extraction.
-
 ##### filename
 
 Type: `string`<br>
@@ -80,7 +73,7 @@ Default: `undefined`
 
 Any of the [`https.request`](https://nodejs.org/api/https.html#https_https_request_options_callback) options.
 
-https://github.com/sindresorhus/got/tree/v10.7.0#options
+https://github.com/sindresorhus/got/tree/v11#options
 
 ### .src(url, [os], [arch])
 

@@ -2,7 +2,6 @@ import {promises as fsPromises} from 'fs';
 import path from 'path';
 import process from 'process';
 import got from 'got';
-import decompress from 'decompress';
 import {fileTypeFromBuffer} from 'file-type';
 import filenamify from 'filenamify';
 import osFilterObj from 'os-filter-obj';
@@ -10,25 +9,6 @@ import binCheck from 'bin-check';
 import binVersionCheck from 'bin-version-check';
 import contentDisposition from 'content-disposition';
 import extName from 'ext-name';
-
-const archiveType = async input => {
-	const exts = new Set([
-		'7z',
-		'bz2',
-		'gz',
-		'rar',
-		'tar',
-		'zip',
-		'xz',
-		'gz',
-	]);
-	const fileTypeResult = await fileTypeFromBuffer(input).catch(() => null);
-	if (fileTypeResult) {
-		return exts.has(fileTypeResult.ext) ? fileTypeResult : null;
-	}
-
-	return null;
-};
 
 const getExtFromMime = response => {
 	const header = response.headers['content-type'];
@@ -80,12 +60,6 @@ const getFilename = async (response, data) => {
 class BinWrapper {
 	constructor(options = {}) {
 		this.options = options;
-
-		if (this.options.strip <= 0) {
-			this.options.strip = 0;
-		} else if (!this.options.strip) {
-			this.options.strip = 1;
-		}
 
 		this._src = [];
 		this._dest = '';
@@ -242,22 +216,20 @@ class BinWrapper {
 		const downloadFile = async (url, output) => {
 			const responsePromise = got(url, {
 				responseType: 'buffer',
-				rejectUnauthorized: process.env.npm_config_strict_ssl !== 'false',
+				https: {
+					rejectUnauthorized: process.env.npm_config_strict_ssl !== 'false',
+				},
 				...this.options.gotOptions,
 			});
 			const response = await responsePromise;
 			const data = await responsePromise.buffer();
 
 			if (!output) {
-				return await archiveType(data) ? decompress(data, {strip: this.options.strip}) : data;
+				return data;
 			}
 
 			const filename = this.options.filename || filenamify(await getFilename(response, data));
 			const outputFilepath = path.join(output, filename);
-
-			if (await archiveType(data)) {
-				return decompress(data, path.dirname(outputFilepath), {strip: this.options.strip});
-			}
 
 			await fsPromises.mkdir(path.dirname(outputFilepath), {recursive: true});
 			await fsPromises.writeFile(outputFilepath, data);
