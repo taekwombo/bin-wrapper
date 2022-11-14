@@ -15,7 +15,7 @@ specifiers:
   eslint-import-resolver-webpack: ^0.13.2
   executable: ^4.1.1
   ext-name: ^5.0.0
-  file-type: ~17.0.0
+  file-type: ^17.1.6
   filenamify: ^5.0.2
   got: ^11.8.3
   husky: ^7.0.4
@@ -33,7 +33,7 @@ dependencies:
   bin-version-check: 5.0.0
   content-disposition: 0.5.4
   ext-name: 5.0.0
-  file-type: 17.0.2
+  file-type: 17.1.6
   filenamify: 5.0.2
   got: 11.8.3
   os-filter-obj: 2.0.0
@@ -2257,12 +2257,12 @@ packages:
       flat-cache: 3.0.4
     dev: true
 
-  /file-type/17.0.2:
-    resolution: {integrity: sha512-lrBLqujGI8O1aOsXuCuwvAu0kmU+pUNsusQNlp2Xs+8JNJm8VNGGPDwLfmtQPmnOxoIKvwk5rOEijrF0RbYHvQ==}
+  /file-type/17.1.6:
+    resolution: {integrity: sha512-hlDw5Ev+9e883s0pwUsuuYNu4tD7GgpUnOvykjv1Gya0ZIjuKumthDRua90VUn6/nlRKAjcxLUnHNTIUWwWIiw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dependencies:
       readable-web-to-node-stream: 3.0.2
-      strtok3: 7.0.0-alpha.8
+      strtok3: 7.0.0
       token-types: 5.0.0-alpha.2
     dev: false
 
@@ -3785,9 +3785,9 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /peek-readable/5.0.0-alpha.5:
-    resolution: {integrity: sha512-pJohF/tDwV3ntnT5+EkUo4E700q/j/OCDuPxtM+5/kFGjyOai/sK4/We4Cy1MB2OiTQliWU5DxPvYIKQAdPqAA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+  /peek-readable/5.0.0:
+    resolution: {integrity: sha512-YtCKvLUOvwtMGmrniQPdO7MwPjgkFBtFIrmfSbYmYuq3tKDV/mcfAhBth1+C3ru7uXIZasc/pHnb+YDYNkkj4A==}
+    engines: {node: '>=14.16'}
     dev: false
 
   /picomatch/2.3.1:
@@ -4413,12 +4413,12 @@ packages:
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
-  /strtok3/7.0.0-alpha.8:
-    resolution: {integrity: sha512-u+k19v+rTxBjGYxncRQjGvZYwYvEd0uP3D+uHKe/s4WB1eXS5ZwpZsTlBu5xSS4zEd89mTXECXg6WW3FSeV8cA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+  /strtok3/7.0.0:
+    resolution: {integrity: sha512-pQ+V+nYQdC5H3Q7qBZAz/MO6lwGhoC2gOAjuouGf/VO0m7vQRh8QNMl2Uf6SwAtzZ9bOw3UIeBukEGNJl5dtXQ==}
+    engines: {node: '>=14.16'}
     dependencies:
       '@tokenizer/token': 0.3.0
-      peek-readable: 5.0.0-alpha.5
+      peek-readable: 5.0.0
     dev: false
 
   /supertap/2.0.0:
