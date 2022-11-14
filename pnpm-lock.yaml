@@ -2342,7 +2342,7 @@ packages:
     resolution: {integrity: sha512-Jid3bdamPSNTb7r28PItNl/wm8frLj7NgEztJXK8UftodFRlynojEvUo4dyr5ftgfqgGhCF6DWaiJVFbpX3uPA==}
     engines: {node: '>=12'}
     dependencies:
-      semver-regex: 4.0.2
+      semver-regex: 4.0.5
     dev: false
 
   /flat-cache/3.0.4:
@@ -4125,8 +4125,8 @@ packages:
       regexp-tree: 0.1.24
     dev: true
 
-  /semver-regex/4.0.2:
-    resolution: {integrity: sha512-xyuBZk1XYqQkB687hMQqrCP+J9bdJSjPpZwdmmNjyxKW1K3LDXxqxw91Egaqkh/yheBIVtKPt4/1eybKVdCx3g==}
+  /semver-regex/4.0.5:
+    resolution: {integrity: sha512-hunMQrEy1T6Jr2uEVjrAIqjwWcQTgOAcIM52C8MY1EZSD3DDNft04XzvYKPqjED65bNVVko0YI38nYeEHCX3yw==}
     engines: {node: '>=12'}
     dev: false
 
