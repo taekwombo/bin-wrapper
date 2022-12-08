@@ -1,6 +1,6 @@
 {
 	"name": "@mole-inc/bin-wrapper",
-	"version": "8.0.0",
+	"version": "8.0.1",
 	"description": "Binary wrapper that makes your programs seamlessly available as local dependencies",
 	"license": "MIT",
 	"type": "module",

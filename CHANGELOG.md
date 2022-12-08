@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [8.0.1](https://github.com/mole-inc/bin-wrapper/compare/v8.0.0...v8.0.1) (2022-12-08)
+
+
+### Bug Fixes
+
+* ignore elf ext ([0c34882](https://github.com/mole-inc/bin-wrapper/commit/0c34882ad85a67d5fd9c8104d0d955a70f7df525))
+
 ## [8.0.0](https://github.com/mole-inc/bin-wrapper/compare/v7.1.1...v8.0.0) (2022-03-01)
 
 
