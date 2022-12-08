@@ -43,7 +43,7 @@ const getFilename = async (response, data) => {
 		const fileTypeResult = await fileTypeFromBuffer(data).catch(() => null);
 		const ext = fileTypeResult ? fileTypeResult.ext : getExtFromMime(response);
 
-		if (ext) {
+		if (ext && ext !== 'elf') {
 			return `${filename}.${ext}`;
 		}
 	}
